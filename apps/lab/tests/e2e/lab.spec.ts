@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const CAPTION = "This is Holocore. It listens, it thinks, and it speaks.";
+const CAPTION = "A holographic orb for AI and voice agents: a 4.5 kB zero-dependency 2D mode and a WebGL mode.";
 const frames = (page: Page) => page.evaluate(() => Number(document.getElementById("orb")?.dataset.holocoreFrames ?? 0));
 const peak = (page: Page) => page.evaluate(() => Number(document.getElementById("orb")?.dataset.levelPeak ?? 0));
 

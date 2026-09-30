@@ -47,6 +47,16 @@ test("installed from the tarball, every entry imports", () => {
   expect(JSON.parse(out)).toEqual(["function", "function", "function", ["holo", "mono", "neutral"], "function", true]);
 }, 60_000);
 
+test("a CommonJS script can require the tokens and the lite orb (Node 22 and later)", () => {
+  writeFileSync(path.join(scratch, "check.cjs"), [
+    'const tokens = require("holocore-ui/tokens");',
+    'const lite = require("holocore-ui/lite");',
+    "console.log(JSON.stringify([typeof tokens.contrast, typeof lite.mount]));",
+  ].join("\n"));
+  const out = execSync("node check.cjs", { cwd: scratch, encoding: "utf8" }).trim();
+  expect(JSON.parse(out)).toEqual(["function", "function"]);
+}, 60_000);
+
 test("a TypeScript consumer gets the declared types of every entry", () => {
   writeFileSync(path.join(scratch, "consumer.ts"), [
     'import { mount } from "holocore-ui/lite";',

@@ -17,5 +17,8 @@
   "dependencies": {
     "holocore-ui": "*",
     "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.6"
   }
 }

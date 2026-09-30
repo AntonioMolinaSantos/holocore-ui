@@ -1,7 +1,7 @@
 {
   "name": "holocore-ui",
-  "version": "0.1.0-rc.1",
-  "description": "A holographic orb for AI and voice agents (a zero-dependency Canvas 2D mode and a full WebGL mode), and the Antonio Molina brand tokens.",
+  "version": "0.1.0-rc.2",
+  "description": "A holographic orb for AI and voice agents: a 4.5 kB zero-dependency 2D mode and a WebGL mode.",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -34,21 +34,25 @@
   "exports": {
     "./lite": {
       "types": "./dist/lite.d.ts",
-      "import": "./dist/lite.js"
+      "import": "./dist/lite.js",
+      "default": "./dist/lite.js"
     },
     "./webgl": {
       "types": "./dist/webgl.d.ts",
-      "import": "./dist/webgl.js"
+      "import": "./dist/webgl.js",
+      "default": "./dist/webgl.js"
     },
     "./react": {
       "types": "./dist/react.d.ts",
-      "import": "./dist/react.js"
+      "import": "./dist/react.js",
+      "default": "./dist/react.js"
     },
     "./cdn/holocore-lite.min.js": "./dist/cdn/holocore-lite.min.js",
     "./package.json": "./package.json",
     "./tokens": {
       "types": "./tokens/src/index.d.mts",
-      "import": "./tokens/src/index.mjs"
+      "import": "./tokens/src/index.mjs",
+      "default": "./tokens/src/index.mjs"
     },
     "./tokens/antonio-molina.css": "./tokens/css/antonio-molina.css",
     "./tokens/jarvis.css": "./tokens/css/jarvis.css",
