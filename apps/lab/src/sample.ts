@@ -1,7 +1,7 @@
 import { levelFromRms, rms } from "./levels";
 
 /** The line Antonio recorded, shown while it plays. Keep it word for word what the recording says. */
-export const SAMPLE_CAPTION = "This is Holocore. It listens, it thinks, and it speaks.";
+export const SAMPLE_CAPTION = "A holographic orb for AI and voice agents: a 4.5 kB zero-dependency 2D mode and a WebGL mode.";
 export const SAMPLE_SRC: string = __SAMPLE_SRC__;
 export const SAMPLE_PRESENT: boolean = __SAMPLE_PRESENT__;
 
