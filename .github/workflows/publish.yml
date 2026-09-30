@@ -3,8 +3,9 @@ name: publish
 # Publishes holocore-ui, the orb and the brand tokens. The tag is the version:
 # v0.1.0-rc.1, v0.1.0. A prerelease must be on dev and
 # publishes under the next dist-tag; a stable version must be on main and
-# publishes under latest. Provenance needs this repository public, which it
-# is before the first tag is pushed.
+# publishes under latest. It publishes through npm trusted publishing: the
+# package trusts this repository and this workflow, so no token is stored, and
+# npm adds provenance on its own.
 on:
   push:
     tags:
@@ -83,6 +84,8 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
 
+      # Trusted publishing needs npm 11.5.1 or later.
+      - run: npm install -g npm@11
       - run: npm ci
 
       # Publishing is the last place a defect can still be stopped, so the
@@ -90,6 +93,4 @@ jobs:
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run build -w holocore-ui && npx vitest run packages/holocore && npm run tokens:check -w holocore-ui && npm run size -w holocore-ui && npm run test:browser -w holocore-ui
 
-      - run: npm publish -w "$PKG_DIR" --tag "$DIST_TAG" --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish -w "$PKG_DIR" --tag "$DIST_TAG" --access public
