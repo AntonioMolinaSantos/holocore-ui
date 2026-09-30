@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Holocore lab: a holographic orb for voice agents</title>
+    <meta name="description" content="A light, open-source holographic orb for AI and voice agents: a zero-dependency 2D mode and a full WebGL mode. Try it here." />
+  </head>
+  <body>
+    <main class="lab">
+      <section class="stage-wrap" aria-label="The orb">
+        <div id="orb" class="orb" role="img" aria-label="Holocore orb."></div>
+        <p id="caption" class="caption" aria-live="polite" hidden></p>
+      </section>
+
+      <section class="panel" aria-label="Controls">
+        <header class="title">
+          <h1>Holocore</h1>
+          <p>A holographic orb for AI and voice agents.</p>
+        </header>
+
+        <fieldset>
+          <legend>Mode</legend>
+          <label><input type="radio" name="mode" value="lite" /> Lite, 2D</label>
+          <label><input type="radio" name="mode" value="webgl" /> WebGL</label>
+        </fieldset>
+
+        <label class="field">Theme
+          <select id="preset">
+            <option value="neutral">Neutral</option>
+            <option value="holo">Holo</option>
+            <option value="mono">Mono</option>
+          </select>
+        </label>
+
+        <label class="field">Accent <input id="accent" type="color" value="#dd5a1e" /></label>
+
+        <div class="field">
+          <label for="rings">Rings</label>
+          <input id="rings" type="range" min="0" max="8" step="1" value="3" />
+          <output id="rings-out" for="rings">3</output>
+        </div>
+
+        <fieldset>
+          <legend>Activity</legend>
+          <label><input type="radio" name="activity" value="calm" /> Calm</label>
+          <label><input type="radio" name="activity" value="busy" /> Busy</label>
+        </fieldset>
+
+        <div class="talk">
+          <button id="talk" class="talk-btn" type="button" aria-pressed="false" disabled>Hold to talk</button>
+          <p class="promise">Your browser asks for the microphone. The sound is analysed on this page only: nothing is recorded, stored or sent.</p>
+          <p class="hint">Or hold the space bar.</p>
+        </div>
+
+        <div class="actions">
+          <button id="sample" type="button">Play a sample</button>
+          <span id="sample-status" role="status"></span>
+          <button id="copy" type="button">Copy this config</button>
+          <span id="copy-status" role="status"></span>
+        </div>
+        <pre><code id="config"></code></pre>
+      </section>
+
+      <section class="install" aria-label="Install">
+        <h2>Install</h2>
+        <pre><code id="install-npm"></code></pre>
+        <p>Lite, from a CDN, with no build step:</p>
+        <pre><code id="install-cdn"></code></pre>
+        <p>In five lines:</p>
+        <pre><code id="install-example"></code></pre>
+      </section>
+    </main>
+
+    <footer>
+      Made by Antonio Molina, <a href="https://www.antonio-molina.fr/en">antonio-molina.fr</a>
+      · <a href="https://www.antonio-molina.fr/en">Work with me</a>
+      · <a href="https://github.com/AntonioMolinaSantos/holocore-ui">GitHub</a>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

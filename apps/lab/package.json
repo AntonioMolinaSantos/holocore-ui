@@ -1,0 +1,21 @@
+{
+  "name": "lab",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "cd ../../packages/holocore && npm run build",
+    "dev": "vite",
+    "prebuild": "cd ../../packages/holocore && npm run build",
+    "build": "vite build",
+    "prebuild:e2e": "cd ../../packages/holocore && npm run build",
+    "build:e2e": "vite build --mode e2e",
+    "preview:e2e": "vite preview --mode e2e --port 4317 --strictPort",
+    "test:browser": "playwright test",
+    "fps": "node scripts/measure-fps.mjs",
+    "capture": "node scripts/capture.mjs"
+  },
+  "dependencies": {
+    "holocore-ui": "*",
+    "three": "^0.170.0"
+  }
+}

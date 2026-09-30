@@ -1,0 +1,25 @@
+{
+  "name": "holocore-ui-workspace",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "npm run build -w holocore-ui && vitest run",
+    "typecheck": "tsc -p packages/holocore && tsc -p apps/lab",
+    "test:browser": "npm run test:browser -w holocore-ui && npm run test:browser -w lab"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^24.19.0",
+    "happy-dom": "^20.14.5",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.6",
+    "vitest": "^4.1.11"
+  }
+}

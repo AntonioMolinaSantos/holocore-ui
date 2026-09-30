@@ -1,0 +1,5 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "types": ["node"] },
+  "include": ["src", "tests", "vite.config.ts", "sample-plugin.ts", "playwright.config.ts", "scripts/tone-wav.d.mts"]
+}

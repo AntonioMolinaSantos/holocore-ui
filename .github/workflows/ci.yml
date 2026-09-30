@@ -1,0 +1,26 @@
+name: ci
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      # Builds the package first, then unit, build and pack tests.
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run size -w holocore-ui
+      - run: node scripts/holo-theme.mjs --check
+      - run: npm run tokens:check -w holocore-ui
+      # The package and the lab, in Chromium and WebKit, with the fake microphone.
+      - run: npm run test:browser

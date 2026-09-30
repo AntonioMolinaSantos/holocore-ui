@@ -1,0 +1,131 @@
+{
+  "color": {
+    "p": "#14A0E6",
+    "p2": "#5CC8FF",
+    "acc": "#DD5A1E",
+    "acc2": "#F0A276",
+    "ground": "#030B14",
+    "surface-1": "#071A2A",
+    "surface-2": "#0A2438",
+    "surface-3": "#0E2F48",
+    "text": "#E8F4FB",
+    "text-muted": "#8FB5C9",
+    "text-subtle": "#6F93A8",
+    "on-accent": "#030B14"
+  },
+  "font": {
+    "body": [
+      "Geist",
+      "Segoe UI",
+      "system-ui",
+      "sans-serif"
+    ],
+    "mono": [
+      "Geist Mono",
+      "Consolas",
+      "ui-monospace",
+      "monospace"
+    ],
+    "display": [
+      "Orbitron",
+      "Geist",
+      "sans-serif"
+    ],
+    "title": [
+      "Titillium Web",
+      "Geist",
+      "sans-serif"
+    ]
+  },
+  "weight": {
+    "body": [
+      400,
+      500,
+      600
+    ],
+    "mono": [
+      400,
+      500
+    ],
+    "display": [
+      500,
+      600,
+      700
+    ],
+    "title": [
+      600,
+      700
+    ]
+  },
+  "size": {
+    "h1": 36,
+    "h2": 24,
+    "h3": 19,
+    "body": 14,
+    "label": 12,
+    "tag": 11,
+    "figure": 28
+  },
+  "space": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    32,
+    40,
+    48,
+    64
+  ],
+  "radius": {
+    "sm": 2,
+    "md": 4,
+    "chamfer": 12,
+    "chamfer-sm": 8
+  },
+  "shadow": {
+    "float": "0 12px 32px rgba(0, 0, 0, 0.45)",
+    "focus": "0 0 0 2px #030B14, 0 0 0 4px #5CC8FF"
+  },
+  "text": [
+    [
+      "text",
+      "surface-1"
+    ],
+    [
+      "text-muted",
+      "surface-1"
+    ],
+    [
+      "text-subtle",
+      "surface-1"
+    ],
+    [
+      "acc2",
+      "surface-1"
+    ],
+    [
+      "p2",
+      "surface-1"
+    ],
+    [
+      "text",
+      "ground"
+    ],
+    [
+      "text-muted",
+      "surface-2"
+    ],
+    [
+      "on-accent",
+      "p2"
+    ]
+  ],
+  "display": [
+    [
+      "acc",
+      "surface-1"
+    ]
+  ]
+}

@@ -1,0 +1,95 @@
+name: publish
+
+# Publishes holocore-ui, the orb and the brand tokens. The tag is the version:
+# v0.1.0-rc.1, v0.1.0. A prerelease must be on dev and
+# publishes under the next dist-tag; a stable version must be on main and
+# publishes under latest. Provenance needs this repository public, which it
+# is before the first tag is pushed.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Refuse to publish from a private repository
+        run: |
+          if [ "${{ github.event.repository.private }}" != "false" ]; then
+            echo "This repository is private: provenance needs it public before the first tag." >&2
+            exit 1
+          fi
+
+      - name: The version this tag releases
+        run: |
+          echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+          echo "PKG_DIR=packages/holocore" >> "$GITHUB_ENV"
+
+      - name: Refuse a tag that is not on its branch
+        run: |
+          # checkout above already used fetch-depth: 0, so the full history is
+          # present. An extra `git fetch --depth=0` is not a no-op: git rejects
+          # it with "depth 0 is not a positive number" and exits 128.
+          require_ancestor_of() {
+            branch="$1"
+            git fetch origin "$branch"
+            if ! git merge-base --is-ancestor "$GITHUB_SHA" "origin/$branch"; then
+              echo "Tag $GITHUB_REF_NAME is not an ancestor of $branch. Merge it there first."
+              exit 1
+            fi
+          }
+          # Parse the version rather than pattern match it: SemVer puts the
+          # prerelease between the patch number and any plus sign, so that is
+          # the part that is read.
+          VERSION_CORE="${VERSION%%+*}"
+          case "$VERSION_CORE" in
+            [0-9]*.[0-9]*.[0-9]*) ;;
+            *) echo "$VERSION is not a SemVer version. Refusing to publish."; exit 1 ;;
+          esac
+          case "$VERSION_CORE" in
+            *-*) PRERELEASE="${VERSION_CORE#*-}" ;;
+            *) PRERELEASE="" ;;
+          esac
+          if [ -n "$PRERELEASE" ]; then
+            require_ancestor_of dev
+            echo "Prerelease $VERSION on dev, publishing under next."
+            echo "DIST_TAG=next" >> "$GITHUB_ENV"
+          else
+            require_ancestor_of main
+            echo "Stable $VERSION on main, publishing under latest."
+            echo "DIST_TAG=latest" >> "$GITHUB_ENV"
+          fi
+
+      - name: Refuse a tag whose version does not match package.json
+        run: |
+          PKG=$(node -p "require('./$PKG_DIR/package.json').version")
+          if [ "$VERSION" != "$PKG" ]; then
+            echo "Tag version $VERSION does not match $PKG_DIR version $PKG."
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      # Publishing is the last place a defect can still be stopped, so the
+      # package's own checks run here, whatever ran on the branch.
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run build -w holocore-ui && npx vitest run packages/holocore && npm run tokens:check -w holocore-ui && npm run size -w holocore-ui && npm run test:browser -w holocore-ui
+
+      - run: npm publish -w "$PKG_DIR" --tag "$DIST_TAG" --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

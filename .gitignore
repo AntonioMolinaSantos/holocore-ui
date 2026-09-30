@@ -1,0 +1,11 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.vercel/
+.env
+.env*.local
+*.tsbuildinfo
+*.log
+apps/lab/fps/
+apps/lab/capture/

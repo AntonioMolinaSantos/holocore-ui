@@ -1,0 +1,90 @@
+{
+  "name": "holocore-ui",
+  "version": "0.1.0-rc.1",
+  "description": "A holographic orb for AI and voice agents (a zero-dependency Canvas 2D mode and a full WebGL mode), and the Antonio Molina brand tokens.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntonioMolinaSantos/holocore-ui.git",
+    "directory": "packages/holocore"
+  },
+  "homepage": "https://github.com/AntonioMolinaSantos/holocore-ui#readme",
+  "keywords": [
+    "orb",
+    "voice",
+    "voice-agent",
+    "ai",
+    "hologram",
+    "canvas",
+    "webgl",
+    "three",
+    "design-tokens"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist",
+    "tokens/src",
+    "tokens/css",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    "./lite": {
+      "types": "./dist/lite.d.ts",
+      "import": "./dist/lite.js"
+    },
+    "./webgl": {
+      "types": "./dist/webgl.d.ts",
+      "import": "./dist/webgl.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./cdn/holocore-lite.min.js": "./dist/cdn/holocore-lite.min.js",
+    "./package.json": "./package.json",
+    "./tokens": {
+      "types": "./tokens/src/index.d.mts",
+      "import": "./tokens/src/index.mjs"
+    },
+    "./tokens/antonio-molina.css": "./tokens/css/antonio-molina.css",
+    "./tokens/jarvis.css": "./tokens/css/jarvis.css",
+    "./tokens/tokens.css": "./tokens/css/tokens.css"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "three": "^0.170.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "three": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsup",
+    "size": "node scripts/size.mjs",
+    "test:browser": "npm run build && playwright test",
+    "tokens": "node scripts/tokens-build.mjs",
+    "tokens:check": "node scripts/tokens-build.mjs --check"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.170.0",
+    "esbuild": "^0.27.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.170.0",
+    "tsup": "^8.5.1"
+  }
+}
