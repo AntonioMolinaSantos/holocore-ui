@@ -19,9 +19,11 @@ npm i holocore-ui
 | Lite | `holocore-ui/lite` | 4.4 kB |
 | WebGL | `holocore-ui/webgl` | 133.4 kB, three.js included |
 
-Sizes measured on 30 September 2026 with `npm run size`. To see the frame rate
-on your own device, open the lab with `?fps` at the end of its address. See
-[Measuring](#measuring) to reproduce the sizes.
+Sizes measured on 1 October 2026 with `npm run size`. The WebGL mode ran at
+45 fps on a phone the same day, read in the lab with `?fps`: one device, so a
+first figure, not a benchmark. To see the frame rate on your own device, open
+the lab with `?fps` at the end of its address. See [Measuring](#measuring) to
+reproduce the sizes.
 
 ## Quick start
 
