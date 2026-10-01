@@ -10,6 +10,8 @@ export type HolocoreOptions = {
   rings?: number;
   /** "busy" lights a third of the rings in the accent colour and speeds them up. Default: "calm". */
   activity?: Activity;
+  /** How many rings to light in the accent colour, whatever the activity: a count of things needing attention. null hands it back to activity. Default: null. */
+  lit?: number | null;
   /** The voice level, 0 to 1, smoothed by the orb. Default: 0. */
   level?: number;
   /** A still orb: no spin, and the level drawn as a still intensity. Default: prefers-reduced-motion. Read at mount only. */
@@ -20,11 +22,15 @@ export type Resolved = {
   readonly theme: Theme;
   readonly rings: number;
   readonly activity: Activity;
+  readonly lit: number | null;
   readonly level: number;
   readonly still: boolean;
 };
 
-export const DEFAULTS: Resolved = Object.freeze({ theme: PRESETS.neutral, rings: 3, activity: "calm", level: 0, still: false });
+export const DEFAULTS: Resolved = Object.freeze({ theme: PRESETS.neutral, rings: 3, activity: "calm", lit: null, level: 0, still: false });
+
+/** A whole count from 0 to MAX_RINGS, or undefined when `v` is not a finite number. */
+const count = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? Math.max(0, Math.min(MAX_RINGS, Math.floor(v))) : undefined);
 
 /** `input` over `prev`. Anything invalid keeps the previous value; a theme equal by value keeps the previous object. */
 export function resolveOptions(input: HolocoreOptions | undefined, prev: Resolved = DEFAULTS): Resolved {
@@ -32,8 +38,9 @@ export function resolveOptions(input: HolocoreOptions | undefined, prev: Resolve
   const theme = o.theme === undefined ? prev.theme : resolveTheme(o.theme, prev.theme);
   return {
     theme: sameTheme(theme, prev.theme) ? prev.theme : theme,
-    rings: typeof o.rings === "number" && Number.isFinite(o.rings) ? Math.max(0, Math.min(MAX_RINGS, Math.floor(o.rings))) : prev.rings,
+    rings: count(o.rings) ?? prev.rings,
     activity: o.activity === "calm" || o.activity === "busy" ? o.activity : prev.activity,
+    lit: o.lit === null ? null : count(o.lit) ?? prev.lit,
     level: sanitizeLevel(o.level) ?? prev.level,
     still: typeof o.reducedMotion === "boolean" ? o.reducedMotion : prev.still,
   };

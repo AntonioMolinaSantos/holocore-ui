@@ -257,7 +257,7 @@ export const startWebgl: EngineStart = (stage, canvas, initial, onFrame) => {
   return {
     set(next) {
       const themeChanged = next.theme !== opts.theme;
-      const ringsChanged = next.rings !== opts.rings || next.activity !== opts.activity;
+      const ringsChanged = next.rings !== opts.rings || next.activity !== opts.activity || next.lit !== opts.lit;
       opts = next;
       if (themeChanged) {
         paint(opts.theme);
