@@ -25,13 +25,13 @@ export type HolocoreProps = HolocoreOptions & {
 
 const layer: CSSProperties = { position: "absolute", inset: 0 };
 
-export function Holocore({ engine = "auto", webgl, theme, rings, activity, level, reducedMotion, className, style }: HolocoreProps) {
+export function Holocore({ engine = "auto", webgl, theme, rings, activity, lit, level, reducedMotion, className, style }: HolocoreProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const liteRef = useRef<HTMLDivElement>(null);
   const glRef = useRef<HTMLDivElement>(null);
   const active = useRef<Handle | null>(null);
-  const latest = useRef<HolocoreOptions>({ theme, rings, activity, level });
-  latest.current = { theme, rings, activity, level };
+  const latest = useRef<HolocoreOptions>({ theme, rings, activity, lit, level });
+  latest.current = { theme, rings, activity, lit, level };
   const loader = useRef(webgl); // an inline arrow is new on every render: read it, never depend on it
   loader.current = webgl;
   const canUpgrade = Boolean(webgl);
@@ -84,8 +84,8 @@ export function Holocore({ engine = "auto", webgl, theme, rings, activity, level
   }, [engine, reducedMotion, canUpgrade]);
 
   useEffect(() => {
-    active.current?.update({ theme, rings, activity, level });
-  }, [theme, rings, activity, level]);
+    active.current?.update({ theme, rings, activity, lit, level });
+  }, [theme, rings, activity, lit, level]);
 
   return (
     <div ref={rootRef} className={className} style={{ position: "relative", width: "100%", height: "100%", ...style }}>

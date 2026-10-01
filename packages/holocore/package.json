@@ -1,6 +1,6 @@
 {
   "name": "holocore-ui",
-  "version": "0.1.0-rc.2",
+  "version": "0.1.0",
   "description": "A holographic orb for AI and voice agents: a 4.5 kB zero-dependency 2D mode and a WebGL mode.",
   "type": "module",
   "license": "MIT",
@@ -88,6 +88,7 @@
     "esbuild": "^0.27.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "terser": "^5.51.2",
     "three": "^0.170.0",
     "tsup": "^8.5.1"
   }

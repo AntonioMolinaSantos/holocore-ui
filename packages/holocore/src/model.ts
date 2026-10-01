@@ -52,15 +52,16 @@ export const MAX_RINGS = 8;
 /** How much faster the beads run when the orb is busy. */
 export const BUSY_SPEED = 1.8;
 
-/** Lit rings: none when calm; a third of them, at least one, when busy. */
-export function hotRings(n: number, activity: Activity): number {
+/** Lit rings: `lit` (already a whole count, 0 or more) when given, never more than there are; otherwise none when calm, and a third, at least one, when busy. */
+export function hotRings(n: number, activity: Activity, lit: number | null = null): number {
+  if (lit !== null) return Math.min(n, lit);
   return activity === "busy" && n > 0 ? Math.max(1, Math.ceil(n / 3)) : 0;
 }
 
 /** One ring per count, each on its own plane so none hides another. */
-export function ringsFor(o: { rings: number; activity: Activity }, base: number, step: number): Ring[] {
+export function ringsFor(o: { rings: number; activity: Activity; lit?: number | null }, base: number, step: number): Ring[] {
   const n = Math.max(0, Math.min(MAX_RINGS, Math.floor(o.rings)));
-  const hot = hotRings(n, o.activity);
+  const hot = hotRings(n, o.activity, o.lit ?? null);
   const speedK = o.activity === "busy" ? BUSY_SPEED : 1;
   return Array.from({ length: n }, (_, i) => ({
     index: i,
