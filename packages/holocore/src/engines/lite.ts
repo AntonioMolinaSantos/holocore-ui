@@ -21,6 +21,11 @@ function sprite(center: string, color: string): HTMLCanvasElement {
 }
 
 type P = [number, number, number, number]; // screen x, screen y, depth, perspective scale
+type V = [number, number, number];
+
+const TAU = Math.PI * 2;
+/** A point at angle `a` on a horizontal circle of radius `r`, at height `y`. */
+const around = (a: number, r: number, y = 0): V => [Math.cos(a) * r, y, Math.sin(a) * r];
 
 export const startLite: EngineStart = (stage, canvas, initial, onFrame) => {
   const maybe = canvas.getContext("2d");
@@ -37,11 +42,15 @@ export const startLite: EngineStart = (stage, canvas, initial, onFrame) => {
 
   const cam = turntable(0.6, 0.42);
   const unbind = bindTurntable(stage, cam);
-  let glowRim = sprite(theme.glow, rgba(theme.rim, 0.9));
-  let glowAccent = sprite(theme.glow, rgba(theme.accent, 0.95));
+  let glowRim: HTMLCanvasElement, glowAccent: HTMLCanvasElement;
+  const glows = () => {
+    glowRim = sprite(theme.glow, rgba(theme.rim, 0.9));
+    glowAccent = sprite(theme.glow, rgba(theme.accent, 0.95));
+  };
+  glows();
 
   // Core lattice: points on a Fibonacci sphere.
-  const lattice: [number, number, number][] = [];
+  const lattice: V[] = [];
   for (let i = 0, N = 460; i < N; i++) {
     const y = 1 - (2 * (i + 0.5)) / N, r = Math.sqrt(1 - y * y), a = i * 2.39996;
     lattice.push([Math.cos(a) * r * 0.62, y * 0.62, Math.sin(a) * r * 0.62]);
@@ -62,7 +71,7 @@ export const startLite: EngineStart = (stage, canvas, initial, onFrame) => {
   const io = new IntersectionObserver((es) => { visible = es[0]?.isIntersecting ?? true; }, { threshold: 0.05 });
   io.observe(stage);
 
-  function proj(p: [number, number, number]): P {
+  function proj(p: V): P {
     const cyw = Math.cos(cam.yaw), syw = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
     const x = p[0] * cyw + p[2] * syw, z = -p[0] * syw + p[2] * cyw, y = p[1];
     const y2 = y * cp - z * sp, z2 = y * sp + z * cp;
@@ -98,12 +107,12 @@ export const startLite: EngineStart = (stage, canvas, initial, onFrame) => {
     ctx.lineWidth = 1;
     for (const r of [0.55, 1.05, 1.55, 2.05]) {
       ctx.beginPath();
-      for (let i = 0; i <= 96; i++) { const a = (i / 96) * Math.PI * 2, q = proj([Math.cos(a) * r, fy, Math.sin(a) * r]); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); }
+      for (let i = 0; i <= 96; i++) { const q = proj(around((i / 96) * TAU, r, fy)); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); }
       ctx.strokeStyle = rgba(theme.core, 0.28); ctx.setLineDash(r > 2 ? [2, 6] : []); ctx.stroke();
     }
     ctx.setLineDash([]);
     for (let i = 0; i < 16; i++) {
-      const a = (i / 16) * Math.PI * 2, p = proj([Math.cos(a) * 0.55, fy, Math.sin(a) * 0.55]), q = proj([Math.cos(a) * 2.05, fy, Math.sin(a) * 2.05]);
+      const a = (i / 16) * TAU, p = proj(around(a, 0.55, fy)), q = proj(around(a, 2.05, fy));
       ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.strokeStyle = rgba(theme.core, 0.12); ctx.stroke();
     }
     const top = proj([0, -0.55, 0]);
@@ -115,9 +124,9 @@ export const startLite: EngineStart = (stage, canvas, initial, onFrame) => {
 
     // Equatorial bezel: 120 ticks, a major every 30 degrees.
     const bez: [P, P][] = [];
-    for (let i = 0; i < 120; i++) { const a = (i / 120) * Math.PI * 2, r0 = i % 10 === 0 ? 1.6 : 1.66; bez.push([proj([Math.cos(a) * r0, 0, Math.sin(a) * r0]), proj([Math.cos(a) * 1.72, 0, Math.sin(a) * 1.72])]); }
+    for (let i = 0; i < 120; i++) { const a = (i / 120) * TAU; bez.push([proj(around(a, i % 10 === 0 ? 1.6 : 1.66)), proj(around(a, 1.72))]); }
     const bezRing: P[] = [];
-    for (let i = 0; i <= 160; i++) { const a = (i / 160) * Math.PI * 2; bezRing.push(proj([Math.cos(a) * 1.72, 0, Math.sin(a) * 1.72])); }
+    for (let i = 0; i <= 160; i++) { bezRing.push(proj(around((i / 160) * TAU, 1.72))); }
     const drawBezel = (front: boolean) => {
       strokeDepth(bezRing, front, theme.core, 1.2, 0.8, 0.8, 0.22);
       ctx.beginPath();
@@ -125,7 +134,7 @@ export const startLite: EngineStart = (stage, canvas, initial, onFrame) => {
       ctx.strokeStyle = front ? theme.rim : theme.core; ctx.globalAlpha = front ? 0.75 : 0.2; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
     };
 
-    const paths = rings.map((o) => { const pts: P[] = []; for (let i = 0; i <= 144; i++) pts.push(proj(orbitPoint(o, (i / 144) * Math.PI * 2))); return pts; });
+    const paths = rings.map((o) => { const pts: P[] = []; for (let i = 0; i <= 144; i++) pts.push(proj(orbitPoint(o, (i / 144) * TAU))); return pts; });
     const beads = rings.map((o) => ({ o, p: proj(orbitPoint(o, t * o.speed + o.phase)) }));
     const drawBead = ({ o, p }: { o: Ring & { trail: number[] }; p: P }) => {
       const s = (o.hot ? 34 : 24) * p[3] * (1 + 0.5 * lv);
@@ -146,7 +155,7 @@ export const startLite: EngineStart = (stage, canvas, initial, onFrame) => {
     const c0 = proj([0, 0, 0]), lensR = S * 0.66 * c0[3] * (1 + 0.06 * lv);
     const lens = ctx.createRadialGradient(c0[0], c0[1], 0, c0[0], c0[1], lensR);
     lens.addColorStop(0, rgba(theme.ground, 0.92)); lens.addColorStop(0.8, rgba(mix(theme.ground, theme.core, 0.15), 0.75)); lens.addColorStop(1, rgba(theme.core, 0.25));
-    ctx.fillStyle = lens; ctx.beginPath(); ctx.arc(c0[0], c0[1], lensR, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = lens; ctx.beginPath(); ctx.arc(c0[0], c0[1], lensR, 0, TAU); ctx.fill();
     const pulse = 1 + 0.025 * Math.sin(t * 1.6) + 0.1 * lv;
     for (const q of lattice) {
       const p = proj([q[0] * pulse, q[1] * pulse, q[2] * pulse]), front = p[2] >= 0;
@@ -186,11 +195,10 @@ export const startLite: EngineStart = (stage, canvas, initial, onFrame) => {
 
   return {
     set(next) {
-      const rebuild = next.rings !== opts.rings || next.activity !== opts.activity;
+      const rebuild = next.rings !== opts.rings || next.activity !== opts.activity || next.lit !== opts.lit;
       if (next.theme !== opts.theme) {
         theme = next.theme;
-        glowRim = sprite(theme.glow, rgba(theme.rim, 0.9));
-        glowAccent = sprite(theme.glow, rgba(theme.accent, 0.95));
+        glows();
       }
       opts = next;
       if (rebuild) build();

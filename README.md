@@ -16,7 +16,7 @@ npm i holocore-ui
 
 | Mode | Entry | Size, minified and gzipped |
 | --- | --- | --- |
-| Lite | `holocore-ui/lite` | 4.5 kB |
+| Lite | `holocore-ui/lite` | 4.4 kB |
 | WebGL | `holocore-ui/webgl` | 133.4 kB, three.js included |
 
 Sizes measured on 30 September 2026 with `npm run size`. To see the frame rate
@@ -87,6 +87,7 @@ component (`"use client"`).
 | `theme` | `"neutral"`, `"holo"`, `"mono"`, or `{ preset, core, rim, accent, glow, ground }` | `"neutral"` | Colour roles in hex. An object replaces the roles it names in its preset. |
 | `rings` | 0 to 8 | 3 | Rings around the core, each on its own plane. |
 | `activity` | `"calm"`, `"busy"` | `"calm"` | Busy lights a third of the rings in the accent colour and speeds them up. |
+| `lit` | 0 to 8, or `null` | `null` | How many rings to light in the accent colour, whatever the activity: a count of things that need attention. `null` leaves it to `activity`. |
 | `level` | 0 to 1 | 0 | The voice level. The orb smooths it (fast attack, slower release), clamps it, and ignores anything that is not a number. |
 | `reducedMotion` | `true`, `false` | the visitor's `prefers-reduced-motion` | No spin; the level becomes a still intensity, redrawn when it changes. Read at mount. |
 

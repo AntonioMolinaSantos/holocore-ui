@@ -53,6 +53,16 @@ describe("rings", () => {
     expect(busy[1].speed).toBeCloseTo(calm[1].speed * BUSY_SPEED, 10);
   });
 
+  test("lit names how many rings are lit, whatever the activity, and never more than there are", () => {
+    expect(hotRings(5, "calm", 2)).toBe(2);
+    expect(hotRings(6, "busy", 0)).toBe(0);
+    expect(hotRings(3, "calm", 7)).toBe(3);
+    expect(hotRings(6, "busy", null)).toBe(2);
+    const r = ringsFor({ rings: 4, activity: "calm", lit: 3 }, 1, 0.1);
+    expect(r.map((x) => x.hot)).toEqual([true, true, true, false]);
+    expect(r[3].speed).toBeCloseTo(ringsFor({ rings: 4, activity: "calm" }, 1, 0.1)[3].speed, 10);
+  });
+
   test("no rings draws none, and past the cap the drawing stops adding rings", () => {
     expect(ringsFor({ rings: 0, activity: "busy" }, 1, 0.1)).toEqual([]);
     expect(ringsFor({ rings: 40, activity: "calm" }, 1, 0.1)).toHaveLength(MAX_RINGS);

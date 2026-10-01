@@ -21,7 +21,7 @@ export default defineConfig([
     format: ["esm"],
     dts: false,
     splitting: false,
-    minify: true,
+    minify: "terser",
     treeshake: true,
     clean: false,
     target: "es2022",
